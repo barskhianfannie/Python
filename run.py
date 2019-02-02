@@ -18,14 +18,15 @@ class Run(object):
                 commission earned, and bonus awarded, in a tabular form.
         """
 Agent.init(agents(2))
-all_customers = customers(1)  
+all_customers = customers(2)
 agents = Agent._agents
+
 
 for customer in all_customers:
     Agent.get(customer)
 
-for agent in agents:
-    print(agent.revenue)
+# for agent in agents:
+#     print(agent.revenue)
 
 
     
