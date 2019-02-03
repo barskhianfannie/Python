@@ -7,6 +7,7 @@ from dealer.agent import Agent
 from datetime import datetime, timedelta
 from numpy import median
 from statistics import stdev
+import locale
 
 class Run(object):
     """
@@ -41,8 +42,17 @@ stats = [wait_time_mean, wait_time_median, SD]
 print("%-2s%14s%12s"%("MEAN", "MEDIAN", "SD"))
 print("%-2.2f%12.2f%15.2f"%(stats[0], stats[1], stats[2]))
 each_agent = set(agent_stats)
+print()
+print("------------------------------------")
+print()
+
+print("%-2s%18s%19s%18s"%("AGENT ID", "DEALS MADE", "TOTAL REVENUE", "COMMISSION"))
 for individual in each_agent:
-    print((individual))
+    for items in individual:
+        locale.setlocale(locale.LC_ALL, '')
+        revenue = locale.currency(items.revenue, grouping = True)
+        comission = locale.currency(items.comission, grouping = True)
+        print("%2s%16s%23s%18s"%(items._agent_id,  items.deals_closed, revenue,  comission))
 
    
 

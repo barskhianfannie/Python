@@ -43,7 +43,8 @@ class Agent(object):
         best_agent = []
 
         for agent in cls._agents:
-            freeAgents.append(agent)
+            if agent.available_time < customer["arrival_time"]:
+                freeAgents.append(agent)
             
         
         if len(freeAgents) > 0 :
@@ -63,7 +64,7 @@ class Agent(object):
                 else:
                     wait_object= agent.available_time - customer["arrival_time"] 
                     agent.available_time = agent.available_time + timedelta(hours= agent._service_time)
-                    wait_time = (((wait_object.total_seconds()) / 60) / 60)
+                    wait_time = (((wait_object.total_seconds()) / 60 / 60))
            
        
         return wait_time, agent
