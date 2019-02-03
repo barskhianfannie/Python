@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from data import CARS, HOURS
 
 freeAgents= []
+agentList = []
 wait_time = 0
 
 class Agent(object):
@@ -31,6 +32,7 @@ class Agent(object):
         cls._agents = [Agent(data) for data in agent_data]
         for agent in cls._agents:
             freeAgents.append(agent)
+            agentList.append(agent)
     
      
 
@@ -42,12 +44,19 @@ class Agent(object):
         Return the agent and wait time (0 if an agent is readily available).
             - customer: Info of customer.
         """  
-        wait_time = 0
+        0
+        wait_time = 0.0
         best_agent = []
-        for agent in cls._agents:
-            if len(freeAgents) == 0:
-                best_agent = filter(lambda x : min(x["available_time"]) , cls._agents)
-                wait_time = agent.available_time - customer["arrival_time"]
+        print(customer)
+    
+        for agent in agentList:
+            print(agent._service_time)
+            if len(freeAgents) is 0:
+                if agent.available_time > customer["arrival_time"]:
+                    best_agent = agent
+                    wait_object= agent.available_time - customer["arrival_time"] 
+                    agent.available_time = agent.available_time + timedelta(hours= agent._service_time)
+                    wait_time = (wait_object.total_seconds()) / 60
             else:
                 break
 

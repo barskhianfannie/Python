@@ -5,7 +5,8 @@ from data.agents import agents
 from data.customers import customers
 from dealer.agent import Agent
 from datetime import datetime, timedelta
-import math
+from numpy import median
+from statistics import stdev
 
 class Run(object):
     """
@@ -20,7 +21,7 @@ class Run(object):
                 commission earned, and bonus awarded, in a tabular form.
         """
 
-Agent.init(agents(2))
+Agent.init(agents(4))
 
 agents = Agent._agents
 
@@ -29,7 +30,12 @@ for customer in customers(4):
     stats= Agent.get(customer)
     print(stats)
     wait_times.append(stats[0])
-    print(sum(wait_times))
+
+
+wait_time_mean = ((sum(wait_times)) / float(len(wait_times)))
+wait_time_median = median(wait_times)
+SD = stdev(wait_times)
+print(wait_time_mean, wait_time_median, SD)
 
    
 
