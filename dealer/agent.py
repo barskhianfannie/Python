@@ -30,12 +30,7 @@ class Agent(object):
     @classmethod
     def init(cls, agent_data):
         cls._agents = [Agent(data) for data in agent_data]
-        for agent in cls._agents:
-            freeAgents.append(agent)
-            agentList.append(agent)
-    
-     
-
+        
         
     @classmethod
     def get(cls, customer):
@@ -44,31 +39,35 @@ class Agent(object):
         Return the agent and wait time (0 if an agent is readily available).
             - customer: Info of customer.
         """  
-        0
         wait_time = 0.0
         best_agent = []
-        print(customer)
-    
-        for agent in agentList:
-            print(agent._service_time)
-            if len(freeAgents) is 0:
-                if agent.available_time > customer["arrival_time"]:
-                    best_agent = agent
+
+        for agent in cls._agents:
+            freeAgents.append(agent)
+            
+        
+        if len(freeAgents) > 0 :
+            for agent in freeAgents:
+                best_agent = max(freeAgents, key=lambda a: 10 * a._expertise[customer["interest"]] + a._rating)
+                freeAgents.remove(agent)
+                agent.available_time = customer['arrival_time'] + timedelta(hours = agent._service_time)
+                if customer["sale_closed"]:
+                    car = customer["interest"]
+                    best_agent.revenue += CARS[car]["price"]
+                    best_agent.deals_closed += 1
+                    best_agent.comission += 10000
+        else:
+            for agent in cls._agents:
+                if agent.available_time < customer["arrival_time"]:
+                    wait_time = 0.0
+                else:
                     wait_object= agent.available_time - customer["arrival_time"] 
                     agent.available_time = agent.available_time + timedelta(hours= agent._service_time)
-                    wait_time = (wait_object.total_seconds()) / 60
-            else:
-                break
+                    wait_time = (((wait_object.total_seconds()) / 60) / 60)
+           
+       
+        return wait_time, agent
 
-        for agent in freeAgents:
-            best_agent = max(freeAgents, key=lambda a: 10 * a._expertise[customer["interest"]] + a._rating)
-            best_agent.available_time = customer['arrival_time'] + timedelta(hours = best_agent._service_time)
-            freeAgents.remove(agent)
-               
-
-        return wait_time, best_agent
-        
-    
         # for revenue in cls._agents:
         #     if customer['sale_closed'] is True:
         #         car_sold = customer["interest"]

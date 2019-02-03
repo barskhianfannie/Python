@@ -21,21 +21,28 @@ class Run(object):
                 commission earned, and bonus awarded, in a tabular form.
         """
 
-Agent.init(agents(4))
+Agent.init(agents(5))
 
 agents = Agent._agents
-
+agent_stats = []
+agents = []
 wait_times = []
-for customer in customers(4):
+for customer in customers(100):
     stats= Agent.get(customer)
-    print(stats)
     wait_times.append(stats[0])
+    agent_stats.append(stats[1:])
+
 
 
 wait_time_mean = ((sum(wait_times)) / float(len(wait_times)))
 wait_time_median = median(wait_times)
 SD = stdev(wait_times)
-print(wait_time_mean, wait_time_median, SD)
+stats = [wait_time_mean, wait_time_median, SD]
+print("%-2s%14s%12s"%("MEAN", "MEDIAN", "SD"))
+print("%-2.2f%12.2f%15.2f"%(stats[0], stats[1], stats[2]))
+each_agent = set(agent_stats)
+for individual in each_agent:
+    print((individual))
 
    
 
