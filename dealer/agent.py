@@ -69,12 +69,3 @@ class Agent(object):
        
         return wait_time, agent
 
-        # for revenue in cls._agents:
-        #     if customer['sale_closed'] is True:
-        #         car_sold = customer["interest"]
-        #         total_revenue = CARS[car_sold]["price"]
-        #         sales.append(total_revenue)
-        #         revenue.revenue += total_revenue
-
-        # return revenue.revenue
-
