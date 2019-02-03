@@ -5,11 +5,8 @@ from data.agents import agents
 from datetime import datetime, timedelta
 from data import CARS, HOURS
 
-agentList = []
-busy = []
-available = []
-sales = []
-waiting_times = []
+freeAgents= []
+wait_time = 0
 
 class Agent(object):
     """
@@ -21,7 +18,7 @@ class Agent(object):
         self._expertise = data["expertise"]
         self._service_time = data["service_time"]
         self._rating = data["rating"]
-        self.revenue = 5
+        self.revenue = 0
         self.deals_closed = 0
         self.comission = 0
         self.bonus = 0
@@ -32,7 +29,10 @@ class Agent(object):
     @classmethod
     def init(cls, agent_data):
         cls._agents = [Agent(data) for data in agent_data]
-        agentList.append(cls._agents)
+        for agent in cls._agents:
+            freeAgents.append(agent)
+    
+     
 
         
     @classmethod
@@ -42,33 +42,30 @@ class Agent(object):
         Return the agent and wait time (0 if an agent is readily available).
             - customer: Info of customer.
         """  
-        print(customer)
+        wait_time = 0
+        best_agent = []
         for agent in cls._agents:
-            if customer["arrival_time"] >= agent.available_time:
-                highest_rating = max(cls._agents, key=lambda a: 10 * a._expertise[customer["interest"]] + a._rating)
-                highest_rating.available_time = customer['arrival_time'] + timedelta(hours= highest_rating._service_time)
-                wait_time = 0
-                print(wait_time, "didn't wait")
-            else:
+            if len(freeAgents) == 0:
+                best_agent = filter(lambda x : min(x["available_time"]) , cls._agents)
                 wait_time = agent.available_time - customer["arrival_time"]
-                agent.available_time = agent.available_time + timedelta(hours= agent._service_time)
-                print(agent.available_time, "waited:", wait_time)
+            else:
+                break
 
+        for agent in freeAgents:
+            best_agent = max(freeAgents, key=lambda a: 10 * a._expertise[customer["interest"]] + a._rating)
+            best_agent.available_time = customer['arrival_time'] + timedelta(hours = best_agent._service_time)
+            freeAgents.remove(agent)
+               
 
+        return wait_time, best_agent
         
+    
+        # for revenue in cls._agents:
+        #     if customer['sale_closed'] is True:
+        #         car_sold = customer["interest"]
+        #         total_revenue = CARS[car_sold]["price"]
+        #         sales.append(total_revenue)
+        #         revenue.revenue += total_revenue
 
-        # for rating in cls._agents:
-        #     rating.available_time = customer['arrival_time'] + timedelta(hours=rating._service_time)
-        #     print(rating.available_time, "updated arrival")
- 
-        for revenue in cls._agents:
-            if customer['sale_closed'] is True:
-                car_sold = customer["interest"]
-                total_revenue = CARS[car_sold]["price"]
-                sales.append(total_revenue)
-            
+        # return revenue.revenue
 
-
-        
-
- 

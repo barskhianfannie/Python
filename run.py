@@ -4,6 +4,8 @@ Car sales.
 from data.agents import agents
 from data.customers import customers
 from dealer.agent import Agent
+from datetime import datetime, timedelta
+import math
 
 class Run(object):
     """
@@ -17,16 +19,20 @@ class Run(object):
             (2) Agent data showing agent ID, deals closed, total revenue generated,
                 commission earned, and bonus awarded, in a tabular form.
         """
+
 Agent.init(agents(2))
-all_customers = customers(2)
+
 agents = Agent._agents
 
+wait_times = []
+for customer in customers(4):
+    stats= Agent.get(customer)
+    print(stats)
+    wait_times.append(stats[0])
+    print(sum(wait_times))
 
-for customer in all_customers:
-    Agent.get(customer)
+   
 
-# for agent in agents:
-#     print(agent.revenue)
 
 
     
