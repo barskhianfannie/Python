@@ -6,8 +6,6 @@ from datetime import datetime, timedelta
 from data import CARS, HOURS
 
 freeAgents= []
-agentList = []
-wait_time = 0
 
 class Agent(object):
     """
@@ -30,6 +28,8 @@ class Agent(object):
     @classmethod
     def init(cls, agent_data):
         cls._agents = [Agent(data) for data in agent_data]
+        for agent in cls._agents:
+            cls._bonus = agent.available_time + timedelta(days= 7)
         
         
     @classmethod
@@ -40,23 +40,17 @@ class Agent(object):
             - customer: Info of customer.
         """  
         wait_time = 0.0
-        best_agent = []
-
+        #Placing 5 agents into Free Agent List to calculate best agents for first customers
         for agent in cls._agents:
             if agent.available_time < customer["arrival_time"]:
                 freeAgents.append(agent)
             
-        
+        #calculating best agent then updating time and adding to available agent list
         if len(freeAgents) > 0 :
             for agent in freeAgents:
                 best_agent = max(freeAgents, key=lambda a: 10 * a._expertise[customer["interest"]] + a._rating)
-                freeAgents.remove(agent)
-                agent.available_time = customer['arrival_time'] + timedelta(hours = agent._service_time)
-                if customer["sale_closed"]:
-                    car = customer["interest"]
-                    best_agent.revenue += CARS[car]["price"]
-                    best_agent.deals_closed += 1
-                    best_agent.comission += 10000
+                freeAgents.remove(best_agent)
+                best_agent.available_time = customer['arrival_time'] + timedelta(hours = best_agent._service_time)
         else:
             for agent in cls._agents:
                 if agent.available_time < customer["arrival_time"]:
@@ -64,8 +58,18 @@ class Agent(object):
                 else:
                     wait_object= agent.available_time - customer["arrival_time"] 
                     agent.available_time = agent.available_time + timedelta(hours= agent._service_time)
-                    wait_time = (((wait_object.total_seconds()) / 60 / 60))
-           
+                    wait_time = (((wait_object.total_seconds()) / 60 ))         
        
-        return wait_time, agent
+        if customer["sale_closed"]:
+                    car = customer["interest"]
+                    agent.revenue += CARS[car]["price"]
+                    agent.deals_closed += 1
+                    agent.comission += 10000
 
+
+        #Calculate Bonus if sold 10 or more cars in one week. 
+        for bonus in cls._agents:
+            if bonus.deals_closed >= 10 and (cls._bonus > customer["arrival_time"]):
+                bonus.bonus = 100000
+
+        return wait_time, agent
