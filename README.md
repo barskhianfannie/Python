@@ -17,3 +17,11 @@ In addition, you need to list out the agents with their performance:
 * Earnings, split out into commission and bonus amounts
 
 The showroom is providing you with test data for agents and customers for an integration test of your software. Conduct your test with 5 agents and 100 customers. In addition, they insist that you write unit tests so they can be confident your logic works.
+
+Aspect                       | Points
+---------------------------- | :----:
+Operation (50)               | 50
+Organization (50)            | 90
+Applicatio of concepts (100) | 80
+Tests (50)                   | 40
+TOTAL                        | 260
